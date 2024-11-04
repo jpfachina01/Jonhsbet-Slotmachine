@@ -3,18 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JonhsBet - Slot Machine</title>
-    <link rel="stylesheet" href="style.css">
-<div class="container">
-        <h1>🎰 JonhsBet 🎰</h1>
-        <div class="slots">
-            <div class="slot" id="slot1">🍒</div>
-            <div class="slot" id="slot2">🍋</div>
-            <div class="slot" id="slot3">🍊</div>
-        </div>
-        <button id="spinButton">Girar</button>
-        <p id="message">Boa sorte!</p>
+    <title>Slot Machine - JonhsBet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2d3436;
+            color: #dfe6e9;
+            text-align: center;
+            padding: 50px;
+        }
+        .balance {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .button:hover {
+            background-color: #74b9ff;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+        #resultado-tabela {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #resultado-tabela th, #resultado-tabela td {
+            border: 1px solid #dfe6e9;
+            padding: 10px;
+            text-align: center;
+        }
+        #resultado-tabela th {
+            background-color: #0984e3;
+            color: white;
+        }
+        .slots {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .slot {
+            width: 120px;
+            height: 120px;
+            background-color: #636e72;
+            border: 2px solid #00b894;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Slot Machine - JonhsBet</h1>
+    <div class="balance">Saldo: R$ <span id="saldo">1000.00</span></div>
+    <input type="number" id="aposta" placeholder="Valor da Aposta" min="10" step="10">
+    <button class="button" onclick="jogar()">Girar</button>
+    <div class="result" id="resultado"></div>
+
+    <div class="slots" id="slots">
+        <div class="slot" id="slot1">?</div>
+        <div class="slot" id="slot2">?</div>
+        <div class="slot" id="slot3">?</div>
     </div>
-    <script src="script.js"></script>
+
+    <table id="resultado-tabela">
+        <thead>
+            <tr>
+                <th>Aposta</th>
+                <th>Resultado</th>
+                <th>Saldo Após</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-corpo">
+            <!-- Resultados das jogadas serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        let saldo = 1000.00;
+
+        function atualizarSaldo() {
+            document.getElementById("saldo").textContent = saldo.toFixed(2);
+        }
+
+        function gerarSimbolos() {
+            const simbolos = ['🍒', '🍋', '🍊', '🍉', '🍇', '⭐']; // Adicione mais símbolos se quiser
+            return simbolos[Math.floor(Math.random() * simbolos.length)];
+        }
+
+        function jogar() {
+            const aposta = parseFloat(document.getElementById("aposta").value);
+            if (isNaN(aposta) || aposta <= 0 || aposta > saldo) {
+                alert("Por favor, insira um valor válido para a aposta.");
+                return;
+            }
+
+            saldo -= aposta; // Deduz a aposta do saldo
+            atualizarSaldo();
+
+            // Gira os slots
+            const slot1 = document.getElementById("slot1");
+            const slot2 = document.getElementById("slot2");
+            const slot3 = document.getElementById("slot3");
+
+            slot1.textContent = gerarSimbolos();
+            slot2.textContent = gerarSimbolos();
+            slot3.textContent = gerarSimbolos();
+
+            const resultado = document.getElementById("resultado");
+            const tabelaCorpo = document.getElementById("tabela-corpo");
+            let novoSaldo;
+
+            // Verifica o resultado
+            if (slot1.textContent === slot2.textContent && slot2.textContent === slot3.textContent) {
+                const premio = aposta * 2; // Ganho é o dobro da aposta
+                saldo += premio; // Adiciona o prêmio ao saldo
+                resultado.textContent = `Parabéns! Você ganhou R$${premio.toFixed(2)}!`;
+                novoSaldo = saldo.toFixed(2);
+            } else {
+                resultado.textContent = `Você perdeu R$${aposta.toFixed(2)}.`;
+                novoSaldo = saldo.toFixed(2);
+            }
+
+            atualizarSaldo();
+
+            // Adiciona a linha na tabela de resultados
+            const novaLinha = document.createElement("tr");
+            novaLinha.innerHTML = `<td>R$${aposta.toFixed(2)}</td><td>${slot1.textContent === slot2.textContent && slot2.textContent === slot3.textContent ? "Ganhou" : "Perdeu"}</td><td>R$${novoSaldo}</td>`;
+            tabelaCorpo.appendChild(novaLinha);
+        }
+    </script>
 </body>
 </html>
