@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Machine - JonhsBet</title>
+    <title>Slot Machine - JonhsBet 🎰🍒</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,20 +33,6 @@
             margin-top: 20px;
             font-size: 1.5rem;
         }
-        #resultado-tabela {
-            margin-top: 20px;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        #resultado-tabela th, #resultado-tabela td {
-            border: 1px solid #dfe6e9;
-            padding: 10px;
-            text-align: center;
-        }
-        #resultado-tabela th {
-            background-color: #0984e3;
-            color: white;
-        }
         .slots {
             display: flex;
             justify-content: center;
@@ -63,11 +49,15 @@
             align-items: center;
             font-size: 2rem;
             margin: 0 10px;
+            transition: transform 0.5s ease; /* Adiciona animação */
+        }
+        .slot.animate {
+            transform: scale(1.2); /* Aumenta o tamanho ao girar */
         }
     </style>
 </head>
 <body>
-    <h1>Slot Machine - JonhsBet</h1>
+    <h1>Slot Machine - JonhsBet 🎰🍒</h1>
     <div class="balance">Saldo: R$ <span id="saldo">1000.00</span></div>
     <input type="number" id="aposta" placeholder="Valor da Aposta" min="10" step="10">
     <button class="button" onclick="jogar()">Girar</button>
@@ -78,19 +68,6 @@
         <div class="slot" id="slot2">?</div>
         <div class="slot" id="slot3">?</div>
     </div>
-
-    <table id="resultado-tabela">
-        <thead>
-            <tr>
-                <th>Aposta</th>
-                <th>Resultado</th>
-                <th>Saldo Após</th>
-            </tr>
-        </thead>
-        <tbody id="tabela-corpo">
-            <!-- Resultados das jogadas serão inseridos aqui -->
-        </tbody>
-    </table>
 
     <script>
         let saldo = 1000.00;
@@ -114,6 +91,15 @@
             saldo -= aposta; // Deduz a aposta do saldo
             atualizarSaldo();
 
+            // Gira os slots com animação
+            const slots = document.querySelectorAll('.slot');
+            slots.forEach(slot => {
+                slot.classList.add('animate');
+                setTimeout(() => {
+                    slot.classList.remove('animate');
+                }, 500); // Remove a classe após a animação
+            });
+
             // Gira os slots
             const slot1 = document.getElementById("slot1");
             const slot2 = document.getElementById("slot2");
@@ -124,7 +110,6 @@
             slot3.textContent = gerarSimbolos();
 
             const resultado = document.getElementById("resultado");
-            const tabelaCorpo = document.getElementById("tabela-corpo");
             let novoSaldo;
 
             // Verifica o resultado
@@ -139,11 +124,6 @@
             }
 
             atualizarSaldo();
-
-            // Adiciona a linha na tabela de resultados
-            const novaLinha = document.createElement("tr");
-            novaLinha.innerHTML = `<td>R$${aposta.toFixed(2)}</td><td>${slot1.textContent === slot2.textContent && slot2.textContent === slot3.textContent ? "Ganhou" : "Perdeu"}</td><td>R$${novoSaldo}</td>`;
-            tabelaCorpo.appendChild(novaLinha);
         }
     </script>
 </body>
