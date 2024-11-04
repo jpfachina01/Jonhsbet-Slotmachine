@@ -3,20 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JonhsBet - Slot Machine</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Slot Machine - JonhsBet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2d3436;
+            color: #dfe6e9;
+            text-align: center;
+            padding: 50px;
+        }
+        .balance {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .button:hover {
+            background-color: #74b9ff;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎰 JonhsBet 🎰</h1>
-        <div class="slots">
-            <div class="slot" id="slot1">🍒</div>
-            <div class="slot" id="slot2">🍋</div>
-            <div class="slot" id="slot3">🍊</div>
-        </div>
-        <button id="spinButton">Girar</button>
-        <p id="message">Boa sorte!</p>
-    </div>
-    <script src="script.js"></script>
+    <h1>Slot Machine - JonhsBet</h1>
+    <div class="balance">Saldo: R$ <span id="saldo">1000.00</span></div>
+    <input type="number" id="aposta" placeholder="Valor da Aposta" min="10" step="10">
+    <button class="button" onclick="jogar()">Girar</button>
+    <div class="result" id="resultado"></div>
+
+    <script>
+        let saldo = 1000.00;
+
+        function atualizarSaldo() {
+            document.getElementById("saldo").textContent = saldo.toFixed(2);
+        }
+
+        function jogar() {
+            const aposta = parseFloat(document.getElementById("aposta").value);
+            if (isNaN(aposta) || aposta <= 0 || aposta > saldo) {
+                alert("Por favor, insira um valor válido para a aposta.");
+                return;
+            }
+
+            saldo -= aposta; // Deduz a aposta do saldo
+            atualizarSaldo();
+
+            const ganhou = Math.random() < 0.3; // 30% de chance de ganhar
+            const resultado = document.getElementById("resultado");
+
+            if (ganhou) {
+                const premio = aposta * 3; // Ganho de R$300 se ganhar
+                saldo += premio; // Adiciona o prêmio ao saldo
+                resultado.textContent = `Parabéns! Você ganhou R$${premio.toFixed(2)}!`;
+            } else {
+                resultado.textContent = `Você perdeu R$${aposta.toFixed(2)}.`;
+            }
+
+            atualizarSaldo();
+        }
+    </script>
 </body>
 </html>
